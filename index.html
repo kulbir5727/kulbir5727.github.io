@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Kulbir Singh Dhindhwal" />
+
+<meta name="date" content="2017-09-19" />
+
+<title>Exploratory Data Analysis on Global Terrorism</title>
+
+<script src="EDA_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="EDA_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="EDA_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="EDA_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="EDA_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="EDA_files/navigation-1.1/tabsets.js"></script>
+<link href="EDA_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="EDA_files/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="Styles/styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exploratory Data Analysis on Global Terrorism</h1>
+<h4 class="author"><em>Kulbir Singh Dhindhwal</em></h4>
+<h4 class="date"><em>19 September 2017</em></h4>
+
+</div>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<blockquote>
+<p>“In many parts of the world, especially Pakistan and Afghanistan, terrorism, war and conflict stop children to go to their schools. We are really tired of these wars. Women and children are suffering.” - Malala Yousafzai</p>
+</blockquote>
+<p>This is an Exploratory Data Analysis (EDA) report on <a href="http://start.umd.edu/gtd/">Global Terrorism Database</a> which is an open source repository containing information on terrorist attacks that took place 1970 to 2016 and has 170,000 cases.</p>
+</div>
+<div id="objective" class="section level1">
+<h1>Objective</h1>
+<p>The objective of this analysis is to understand the geographical spread of terrorist attacks on a global scale. Before the geographical analysis is done it is important to understand the trend of these attacks through the years and check seasonality. Once it is known where maximum attacks have occurred then different hypothesis will be made which can be further investigated.</p>
+</div>
+<div id="experiments" class="section level1">
+<h1>Experiments</h1>
+<div id="experiment-1-quick-peek-for-understanding-the-different-variables" class="section level2">
+<h2>Experiment 1: Quick peek for understanding the different variables</h2>
+<pre><code>## &#39;data.frame&#39;:    170350 obs. of  24 variables:
+##  $ X              : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ Year           : int  1970 1970 1970 1970 1970 1970 1970 1970 1970 1970 ...
+##  $ Month          : int  7 0 1 1 1 1 1 1 1 1 ...
+##  $ Day            : int  2 0 0 0 0 1 2 2 2 3 ...
+##  $ Region         : chr  &quot;Central America &amp; Caribbean&quot; &quot;North America&quot; &quot;Southeast Asia&quot; &quot;Western Europe&quot; ...
+##  $ State          : chr  &quot;&quot; &quot;&quot; &quot;Tarlac&quot; &quot;Attica&quot; ...
+##  $ City           : chr  &quot;Santo Domingo&quot; &quot;Mexico city&quot; &quot;Unknown&quot; &quot;Athens&quot; ...
+##  $ attacktype1    : int  1 6 1 3 7 2 1 3 7 7 ...
+##  $ attacktype1_txt: chr  &quot;Assassination&quot; &quot;Hostage Taking (Kidnapping)&quot; &quot;Assassination&quot; &quot;Bombing/Explosion&quot; ...
+##  $ targtype1      : int  14 7 10 7 7 3 3 21 4 2 ...
+##  $ targtype1_txt  : chr  &quot;Private Citizens &amp; Property&quot; &quot;Government (Diplomatic)&quot; &quot;Journalists &amp; Media&quot; &quot;Government (Diplomatic)&quot; ...
+##  $ natlty1        : int  58 21 217 217 217 217 218 217 217 217 ...
+##  $ natlty1_txt    : chr  &quot;Dominican Republic&quot; &quot;Belgium&quot; &quot;United States&quot; &quot;United States&quot; ...
+##  $ gname          : chr  &quot;MANO-D&quot; &quot;23rd of September Communist League&quot; &quot;Unknown&quot; &quot;Unknown&quot; ...
+##  $ gsubname       : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+##  $ gname2         : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+##  $ gsubname2      : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+##  $ gname3         : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+##  $ gsubname3      : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+##  $ motive         : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+##  $ weaptype1      : int  13 13 13 6 8 5 5 6 8 8 ...
+##  $ weaptype1_txt  : chr  &quot;Unknown&quot; &quot;Unknown&quot; &quot;Unknown&quot; &quot;Explosives/Bombs/Dynamite&quot; ...
+##  $ latitude       : num  18.5 19.4 15.5 38 33.6 ...
+##  $ longitude      : num  -70 -99.1 120.6 23.7 130.4 ...</code></pre>
+</div>
+<div id="experiment-2-terror-attacks-by-the-year" class="section level2">
+<h2>Experiment 2: Terror attacks by the year</h2>
+<p><img src="EDA_files/figure-html/unnamed-chunk-3-1.png" width="1440" /></p>
+<p>There has been a significant increase in the number of terror attacks from 2011 onwards.</p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-4-1.png" width="1440" /></p>
+<p>Globally terrorist attacks have increased by a marigin of ~65% in the period 2011 to 2012 and has steadily increased by ~40% in 2012 to 2013 and 2013 to 2014. Though it has decreased but the attacks are still higher in number when compared to the period of 1998 to 2010.</p>
+</div>
+<div id="experiment-3-terror-attacks-by-the-month" class="section level2">
+<h2>Experiment 3: Terror attacks by the month</h2>
+<p><img src="EDA_files/figure-html/unnamed-chunk-5-1.png" width="1440" /></p>
+<p>Since there is no discernable pattern/trend it can be said that Global Terrorism is not influenced by seasons.</p>
+</div>
+<div id="experiment-4-terror-attack-type-by-the-year" class="section level2">
+<h2>Experiment 4: Terror attack type by the year</h2>
+<p>First it is important to find the commonly used attack types.</p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-6-1.png" width="1440" /></p>
+<p>From above it can be claimed that Bombing/Explosion , Armed Assault and Assassination are the more commonly used attack types.</p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-7-1.png" width="1440" /></p>
+<p>The above figure shows how Bombing/Explosion and Armed Assault attacks have increased over the past few years. It also evident that Bombing/Explosion have contributed to global terrorism the most.</p>
+</div>
+<div id="experiment-5-bombingexplosion-attacks-in-each-region-in-the-last-five-years" class="section level2">
+<h2>Experiment 5: Bombing/Explosion attacks in each Region in the last five years</h2>
+<p><img src="EDA_files/figure-html/unnamed-chunk-8-1.png" width="1440" /></p>
+<p>Middle East &amp; North Africa and South Asian Regions have seen the most Bombing/Explosion attacks in the past five years.</p>
+<div id="all-the-bombingsexplosion-terror-attacks-in-middle-east-north-africa-in-the-last-five-years" class="section level3">
+<h3>All the Bombings/Explosion terror attacks in Middle East &amp; North Africa in the last five years</h3>
+<p><img src="MiddleEastBombings.png" width="2000" height="2000" /></p>
+</div>
+<div id="top-states-in-middle-east-and-north-africa-affected-by-bombingexplosion-in-the-last-five-years" class="section level3">
+<h3>Top States in Middle East and North Africa affected by Bombing/Explosion in the last five years</h3>
+<p><img src="EDA_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
+<p><img src="TopMiddleEastBombings.png" width="2000" height="2000" /></p>
+</div>
+<div id="all-the-bombingsexplosion-terror-attacks-in-south-asia-in-the-last-five-years" class="section level3">
+<h3>All the Bombings/Explosion terror attacks in South Asia in the last five years</h3>
+<p><img src="SouthAsiaBombings.png" width="2000" height="2000" /></p>
+</div>
+<div id="top-states-in-south-asia-affected-by-bombingexplosion-in-the-last-five-years" class="section level3">
+<h3>Top States in South Asia affected by Bombing/Explosion in the last five years</h3>
+<p><img src="EDA_files/figure-html/unnamed-chunk-15-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p><img src="TopSouthAsiaBombings.png" width="2000" height="2000" /></p>
+</div>
+</div>
+<div id="experiment-6-target-type-by-the-year" class="section level2">
+<h2>Experiment 6: Target type by the year</h2>
+<p>First let’s determine common target types for attacks</p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-17-1.png" width="1440" /></p>
+<p>Business, Government (General), Military, Police and Private Citizens &amp; Property are the most affected by these terrorist attacks.</p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-18-1.png" width="1440" /></p>
+<p>There are significant number of Military, Police and, Private Citizens and Property targetted by terrorist. Let us plot and see what percentage of these targets were used for attack in regions with high bombing/explosion for the same attack type, in the last five years.</p>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p><img src="BombingsForSpecificTargets.png" width="2000" height="2000" /></p>
+<p>In the past five years 37% of the Global Terrorism targetted Military, Police and, Private Citizens and Property, where Bombing/Explosion or Armed Assault was used for the attack.</p>
+</div>
+<div id="next-steps" class="section level1">
+<h1>Next Steps</h1>
+<p>EDA on Global Terrorism database claims that certain target types and attack types are more frequently witnessed tools and tactics for terrorism. Though, it does not reveal the exact reason for the rise in terrorist attacks around the world. Further investigations should be made in finding reasons for upsurge in these attacks in certain parts of South Asia, Middle East and North Africa.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
